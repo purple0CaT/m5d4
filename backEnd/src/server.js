@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 
 import listEndpoints from "express-list-endpoints";
-import postStirve from "./posts/posts.js";
-// import authorStrive from "./authors/authors.js";
+import postStirve from "./services/posts/posts.js";
+import authorStrive from "./services/authors/authors.js";
 import {
   genericErrHandl,
   notFoundErrHandl,
@@ -19,7 +19,7 @@ const port = 3003;
 server.use(cors());
 server.use(express.json());
 // ==== ROUTES / ENDPOINTS ====
-// server.use("/authors", authorStrive);
+server.use("/authors", authorStrive);
 server.use("/blogPosts", postStirve);
 // ERROR MIDDLEWARE
 server.use(badreqFoundErrHandl);
