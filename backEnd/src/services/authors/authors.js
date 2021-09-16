@@ -8,7 +8,7 @@ import {
   getAuthor,
   writeAuthor,
   saveAuthrPic,
-  authrFolderPath,
+  avatarPath,
 } from "../fs-tools.js";
 import { checkAuthorId, checkPostValid } from "./validMidW.js";
 import { validationResult } from "express-validator";
@@ -41,11 +41,17 @@ authorStrive.get("/:authorId", checkAuthorId, async (req, res, next) => {
 authorStrive.post(
   "/:authorId/uploadAvatar",
   checkAuthorId,
-  multer().single("profilePic"),
+  multer({
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype != "image/jpeg" || file.mimetype != "image/png")
+        cb(createHttpError(400, "Format not suported!"), false);
+      else cb(null, true);
+    },
+  }).single("profilePic"),
   async (req, res, next) => {
     try {
       let typeFile = req.file.originalname.split(".").reverse()[0];
-      let nameOfFile = join(req.params.authorId, join(".", typeFile));
+      let nameOfFile = req.params.authorId + "." + typeFile;
       await saveAuthrPic(nameOfFile, req.file.buffer);
       // fitering and edditing the Authors url
       const authors = await getAuthor();
@@ -54,7 +60,7 @@ authorStrive.post(
       );
       const updateAuthor = {
         ...authors[index],
-        avatar: join(authrFolderPath, nameOfFile),
+        cover: join(avatarPath, nameOfFile),
       };
       authors[index] = updateAuthor;
       //   save file

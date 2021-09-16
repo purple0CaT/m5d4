@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { join } from "path";
 
 import listEndpoints from "express-list-endpoints";
 import postStirve from "./services/posts/posts.js";
@@ -13,8 +14,9 @@ import {
 // === Server ===
 const server = express();
 const port = 3003;
-
+const publicFolderPath = join(process.cwd(), "public");
 // === COnfiguration | Before endpoints! ===
+server.use(express.static(publicFolderPath));
 // body converter
 server.use(cors());
 server.use(express.json());

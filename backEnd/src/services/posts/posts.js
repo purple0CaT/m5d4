@@ -1,8 +1,9 @@
 import express from "express";
-import fs from "fs";
+import createHttpError from "http-errors";
+import uniqid from "uniqid";
+import multer from "multer";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
 import {
   getIdMiddleware,
@@ -10,8 +11,7 @@ import {
   putMiddleware,
   getTitleMiddleware,
 } from "./checkMiddleware.js";
-import uniqid from "uniqid";
-import { writePost, getPost, postsJson } from "../fs-tools.js";
+import { writePost, getPost, coverPath, saveCoverrPic } from "../fs-tools.js";
 
 const postStirve = express.Router();
 
@@ -47,6 +47,34 @@ postStirve.get("/:postId", getIdMiddleware, async (req, res, next) => {
     next(createHttpError(400, "Bad request"));
   }
 });
+
+// POST IMG
+postStirve.post(
+  "/:postId/uploadCover",
+  getIdMiddleware,
+  multer().single("coverPic"),
+  async (req, res, next) => {
+    try {
+      let typeFile = req.file.originalname.split(".").reverse()[0];
+      let nameOfFile = req.params.postId + "." + typeFile;
+      await saveCoverrPic(nameOfFile, req.file.buffer);
+      // fitering and edditing the Authors url
+      const posts = await getPost();
+      const index = posts.findIndex((post) => post._id == req.params.postId);
+      const updatePosts = {
+        ...posts[index],
+        cover: join(coverPath, nameOfFile),
+      };
+      posts[index] = updatePosts;
+      //   save file
+      await writePost(posts);
+      res.send("Ok");
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 // POST
 postStirve.post("/", postMiddleware, async (req, res, next) => {
   const errorList = validationResult(req);
