@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Yoda",
+    "surname": "Master",
+    "email": "yoda@mail",
+    "dateBirth": "21 jan 2000",
+    "avatar": "https://cdn.jwplayer.com/v2/media/h1ferMj9/poster.jpg?width=720",
+    "_id": "alkdnlaj123qlka"
+  },
+
+  {
+    "name": "Dart",
+    "surname": "Vader",
+    "email": "skywalker@mail",
+    "dateBirth": "896 BBY",
+    "avatar": "https://upload.wikimedia.org/wikipedia/en/0/0b/Darth_Vader_in_The_Empire_Strikes_Back.jpg",
+    "_id": "5yua6167bktk6odfh"
+  },
+  {
+    "name": "Delete",
+    "surname": "Me",
+    "email": "Right@mail",
+    "dateBirth": "Now",
+    "avatar": "https://ui-avatars.com/api/?name=John+Doe",
+    "_id": "5yua6167bktk6123fh"
+  }
+]
