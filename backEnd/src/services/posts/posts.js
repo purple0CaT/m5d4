@@ -30,7 +30,6 @@ postStirve.get("/", getTitleMiddleware, async (req, res, next) => {
   } else {
     try {
       const posts = await getPost();
-      console.log(posts);
       res.send(posts);
     } catch (error) {
       next(createHttpError(400, "Bad request"));
@@ -82,7 +81,12 @@ postStirve.post("/", postMiddleware, async (req, res, next) => {
     next(createHttpError(400, { errorList }));
   } else {
     try {
-      const newPost = { ...req.body, _id: uniqid(), createdAt: new Date() };
+      const newPost = {
+        ...req.body,
+        comments: [],
+        _id: uniqid(),
+        createdAt: new Date(),
+      };
       const posts = await getPost();
       posts.push(newPost);
       //   save send
@@ -99,7 +103,6 @@ postStirve.put(
   putMiddleware,
   postMiddleware,
   async (req, res, next) => {
-    console.log("start");
     const errorList = validationResult(req);
     if (!errorList.isEmpty()) {
       next(createHttpError(400, { errorList }));

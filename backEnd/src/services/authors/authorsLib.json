@@ -4,7 +4,7 @@
     "surname": "Master",
     "email": "yoda@mail",
     "dateBirth": "21 jan 2000",
-    "avatar": "/Volumes/Data/Code/Strive/m5d4/backEnd/public/img/authors/alkdnlaj123qlka/jpeg",
+    "avatar": "http://localhost:3003/img/authors/alkdnlaj123qlka/jpeg",
     "_id": "alkdnlaj123qlka"
   },
   {
@@ -12,7 +12,7 @@
     "surname": "Vader",
     "email": "skywalker@mail",
     "dateBirth": "896 BBY",
-    "avatar": "/Volumes/Data/Code/Strive/m5d4/backEnd/public/img/authors/5yua6167bktk6odfh/jpeg",
+    "avatar": "/http://localhost:3003/img/authors/5yua6167bktk6odfh/jpeg",
     "_id": "5yua6167bktk6odfh"
   },
   {
