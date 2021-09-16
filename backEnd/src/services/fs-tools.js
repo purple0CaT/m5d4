@@ -29,3 +29,10 @@ export const coverPath = "http://localhost:3003/img/covers/";
 export const saveCoverrPic = (name, content) => {
   writeFile(join(coversFolderPath, name), content);
 };
+
+// dynamic URL
+const isProduction = process.env.NODE_ENV === "production";
+const port = isProduction ? "" : ":3001";
+const baseURL = `PROTOCOL://HOSTNAME${port}`;
+//${req.protocol} ${req.hostname}
+const url = `${baseURL}/img/authors/FILENAME`;
