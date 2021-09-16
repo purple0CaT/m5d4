@@ -129,5 +129,42 @@ postStirve.delete("/:postId", getIdMiddleware, async (req, res, next) => {
     next(createHttpError(406, "Not Acceptable"));
   }
 });
+// Comments
+// Get
+postStirve.get("/:postId/comments", getIdMiddleware, async (req, res, next) => {
+  try {
+    const posts = await getPost();
+    const post = posts.filter((post) => post._id == req.params.postId);
+    res.status(200).send(post[0].comments);
+  } catch (error) {
+    next(createHttpError(400, "Bad request"));
+  }
+});
+// Post
+postStirve.post(
+  "/:postId/comments",
+  getIdMiddleware,
+  async (req, res, next) => {
+    try {
+      const newComment = { ...req.body, _id: uniqid() };
+      // const post = posts.filter((post) => post._id == req.params.postId);
+      // post[0].comments.push(newComment);
+      const posts = await getPost();
+      const index = posts.findIndex((post) => post._id == req.params.postId);
+      // const updatePost = { ...posts[index], ...req.body };
+      let updatePosts = posts[index];
+      updatePosts = {
+        ...posts[index],
+        comments: [...updatePosts.comments, newComment],
+      };
+      posts[index] = updatePosts;
+      await writePost(posts);
+      res.status(200).send(newComment);
+    } catch (error) {
+      next(createHttpError(400, "Bad request"));
+    }
+  }
+);
+
 // exp
 export default postStirve;
