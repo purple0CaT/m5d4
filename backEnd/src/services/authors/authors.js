@@ -1,10 +1,18 @@
 import express from "express";
 import uniqid from "uniqid";
-import { getAuthor, writeAuthor } from "../fs-tools.js";
 import multer from "multer";
-import { checkAuthorId, checkPostValid } from "./validMidW.js";
 import createHttpError from "http-errors";
+import { join } from "path";
+
+import {
+  getAuthor,
+  writeAuthor,
+  saveAuthrPic,
+  authrFolderPath,
+} from "../fs-tools.js";
+import { checkAuthorId, checkPostValid } from "./validMidW.js";
 import { validationResult } from "express-validator";
+
 // ==
 const authorStrive = express.Router();
 
@@ -33,11 +41,27 @@ authorStrive.get("/:authorId", checkAuthorId, async (req, res, next) => {
 authorStrive.post(
   "/:authorId/uploadAvatar",
   checkAuthorId,
+  multer().single("profilePic"),
   async (req, res, next) => {
-    const authors = await getAuthor();
     try {
+      let typeFile = req.file.originalname.split(".").reverse()[0];
+      let nameOfFile = join(req.params.authorId, join(".", typeFile));
+      await saveAuthrPic(nameOfFile, req.file.buffer);
+      // fitering and edditing the Authors url
+      const authors = await getAuthor();
+      const index = authors.findIndex(
+        (authr) => authr._id == req.params.authorId
+      );
+      const updateAuthor = {
+        ...authors[index],
+        avatar: join(authrFolderPath, nameOfFile),
+      };
+      authors[index] = updateAuthor;
+      //   save file
+      await writeAuthor(authors);
+      res.send("Ok");
     } catch (err) {
-      res.send(err);
+      next(err);
     }
   }
 );
@@ -75,6 +99,8 @@ authorStrive.put(
       next(createHttpError(400, { errorList }));
     } else {
       // SUCCESS POST
+      const posts = await getPost();
+      const index = posts.findIndex((post) => post._id == req.params.postId);
       const updateAuthor = { ...authors[index], ...req.body };
       authors[index] = updateAuthor;
       //   save file
@@ -84,7 +110,7 @@ authorStrive.put(
   }
 );
 // delete
-authorStrive.delete("/:postId", checkAuthorId, async (req, res,next) => {
+authorStrive.delete("/:postId", checkAuthorId, async (req, res, next) => {
   const authors = await getAuthor();
   try {
     const filtered = authors.filter((auth) => auth._id != req.params.postId);

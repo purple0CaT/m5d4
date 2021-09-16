@@ -17,6 +17,7 @@ export const getAuthor = () => readJSON(authorJson);
 export const writeAuthor = (content) => writeJSON(authorJson, content);
 
 // = FILES
-const publFolderPath = join(process.cwd(), "/public/img/students");
-export const saveStudPic = (name, contentBuffer) =>
-  writeFile(join(publFolderPath, name), contentBuffer);
+export const authrFolderPath = join(process.cwd(), "/public/img/authors");
+export const saveAuthrPic = (name, content) => {
+  writeFile(join(authrFolderPath, name), content);
+};
