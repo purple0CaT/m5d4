@@ -19,13 +19,13 @@ export const writeAuthor = (content) => writeJSON(authorJson, content);
 // = FILES
 // = Authors
 const authrFolderPath = join(process.cwd(), "/public/img/authors");
-export const avatarPath = "http://localhost:3003/img/authors";
+export const avatarPath = "http://localhost:3003/img/authors/";
 export const saveAuthrPic = (name, content) => {
   writeFile(join(authrFolderPath, name), content);
 };
 // = covers
 const coversFolderPath = join(process.cwd(), "/public/img/covers");
-export const coverPath = "http:///localhost:3003/img/covers";
+export const coverPath = "http://localhost:3003/img/covers/";
 export const saveCoverrPic = (name, content) => {
   writeFile(join(coversFolderPath, name), content);
 };

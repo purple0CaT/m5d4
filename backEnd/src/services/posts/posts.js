@@ -62,7 +62,7 @@ postStirve.post(
       const index = posts.findIndex((post) => post._id == req.params.postId);
       const updatePosts = {
         ...posts[index],
-        cover: join(coverPath, nameOfFile),
+        cover: coverPath + nameOfFile,
       };
       posts[index] = updatePosts;
       //   save file

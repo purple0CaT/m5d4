@@ -60,7 +60,7 @@ authorStrive.post(
       );
       const updateAuthor = {
         ...authors[index],
-        cover: join(avatarPath, nameOfFile),
+        cover: avatarPath + nameOfFile,
       };
       authors[index] = updateAuthor;
       //   save file
