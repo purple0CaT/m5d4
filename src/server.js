@@ -13,7 +13,7 @@ import {
 } from "./errorHandler.js";
 // === Server ===
 const server = express();
-const port = 3003;
+const port = process.env.PORT;
 const publicFolderPath = join(process.cwd(), "public");
 // === COnfiguration | Before endpoints! ===
 server.use(express.static(publicFolderPath));
