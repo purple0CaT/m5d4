@@ -36,3 +36,7 @@ const port = isProduction ? "" : ":3001";
 const baseURL = `PROTOCOL://HOSTNAME${port}`;
 //${req.protocol} ${req.hostname}
 const url = `${baseURL}/img/authors/FILENAME`;
+
+// STREAM
+// STREAM
+export const getReadableStream = () => fs.createReadStream(postsJson);

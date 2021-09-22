@@ -11,7 +11,15 @@ import {
   putMiddleware,
   getTitleMiddleware,
 } from "./checkMiddleware.js";
-import { writePost, getPost, coverPath, saveCoverrPic } from "../fs-tools.js";
+import {
+  writePost,
+  getPost,
+  coverPath,
+  saveCoverrPic,
+  getReadableStream,
+} from "../fs-tools.js";
+import { pipeline } from "stream";
+import { getPdfStream } from "./pdf.js";
 
 const postStirve = express.Router();
 
@@ -168,6 +176,32 @@ postStirve.post(
     }
   }
 );
+// SAVE FILE
+postStirve.get("/streamSrc/save", async (req, res, next) => {
+  try {
+    res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
+    const source = getReadableStream();
+    const destination = res;
+    pipeline(source, destination, (err) => {
+      if (err) next(err);
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+// SAVE PDF
+postStirve.get("/streamSrc/savePDF", async (req, res, next) => {
+  try {
+    res.setHeader("Content-Disposition", "atachment; filename=example.pdf");
+    const source = getPdfStream();
+    const destination = res;
 
+    pipeline(source, destination, (err) => {
+      if (err) next(err);
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 // exp
 export default postStirve;
