@@ -9,7 +9,7 @@ const getPost = () => JSON.parse(fs.readFileSync(postJson));
 
 // get ID check
 export const getIdMiddleware = (req, res, next) => {
-  const posts = getPost();
+  const posts = await getPost();
   const check = posts.some((post) => post._id == req.params.postId);
   if (check) {
     next();

@@ -88,7 +88,7 @@ postStirve.post(
       const index = posts.findIndex((p) => p._id == req.params.postId);
       const updatedPosts = {
         ...posts[index],
-        imageUrl: urlPhoto,
+        cover: urlPhoto,
       };
       posts[index] = updatedPosts;
       await writePost(posts);
