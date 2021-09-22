@@ -2,9 +2,11 @@ import express from "express";
 import createHttpError from "http-errors";
 import uniqid from "uniqid";
 import multer from "multer";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+// import { fileURLToPath } from "url";
+// import { dirname, join } from "path";
 import { validationResult } from "express-validator";
+import { pipeline } from "stream";
+import { getPdfStream } from "./pdf.js";
 // MIDDLEWARES
 import {
   getIdMiddleware,
@@ -20,8 +22,6 @@ import {
   saveCoverrPic,
   getReadableStream,
 } from "../fs-tools.js";
-import { pipeline } from "stream";
-import { getPdfStream } from "./pdf.js";
 
 const postStirve = express.Router();
 
@@ -179,31 +179,29 @@ postStirve.post(
   }
 );
 // SAVE FILE
-// postStirve.get("/streamSrc/save", async (req, res, next) => {
-//   try {
-//     res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
-//     const source = getReadableStream();
-//     const destination = res;
-//     pipeline(source, destination, (err) => {
-//       if (err) next(err);
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-// SAVE PDF
-postStirve.get("/:postId/savePDF", async (req, res, next) => {
+postStirve.get("/streamSrc/save", async (req, res, next) => {
   try {
-    // res.setHeader("Content-Disposition", "atachment; filename=example.pdf");
-    const posts = await getPost();
-    const post = posts.filter((pt) => pt._id == req.params.postId);
-    const source = getPdfStream(post[0]);
+    res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
+    const source = getReadableStream();
     const destination = res;
-
     pipeline(source, destination, (err) => {
       if (err) next(err);
     });
-    // res.send([post]);
+  } catch (err) {
+    next(err);
+  }
+});
+// SAVE PDF
+postStirve.get("/:postId/savePDF", async (req, res, next) => {
+  try {
+    const posts = await getPost();
+    const post = posts.filter((pt) => pt._id == req.params.postId);
+    res.setHeader("Content-Disposition", "atachment; filename=Post.pdf");
+    const source = getPdfStream(post[0]);
+    const destination = res;
+    pipeline(source, destination, (err) => {
+      if (err) next(err);
+    });
   } catch (err) {
     next(err);
   }

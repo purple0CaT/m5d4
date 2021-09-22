@@ -19,7 +19,7 @@ export const getPdfStream = (data) => {
   };
   const pdfDoc = printer.createPdfKitDocument(docDefinition, options);
   pdfDoc.end();
-  // return
+
   return pdfDoc;
 };
 // pdfDoc.pipe(fs.createWriteStream("document.pdf"));
