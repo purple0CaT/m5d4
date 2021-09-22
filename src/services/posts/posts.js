@@ -178,19 +178,7 @@ postStirve.post(
     }
   }
 );
-// SAVE FILE
-postStirve.get("/streamSrc/save", async (req, res, next) => {
-  try {
-    res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
-    const source = getReadableStream();
-    const destination = res;
-    pipeline(source, destination, (err) => {
-      if (err) next(err);
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+
 // SAVE PDF
 postStirve.get("/:postId/savePDF", async (req, res, next) => {
   try {
@@ -208,3 +196,16 @@ postStirve.get("/:postId/savePDF", async (req, res, next) => {
 });
 // exp
 export default postStirve;
+// SAVE FILE
+// postStirve.get("/streamSrc/save", async (req, res, next) => {
+//   try {
+//     res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
+//     const source = getReadableStream();
+//     const destination = res;
+//     pipeline(source, destination, (err) => {
+//       if (err) next(err);
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
