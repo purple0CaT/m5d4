@@ -1,6 +1,6 @@
 import PdfPrinter from "pdfmake";
 
-export const getPdfStream = () => {
+export const getPdfStream = (data) => {
   var fonts = {
     Roboto: {
       normal: "Helvetica",
@@ -12,7 +12,7 @@ export const getPdfStream = () => {
   const printer = new PdfPrinter(fonts);
   const docDefinition = {
     // ...
-    content: ["someparagr", "other staff"],
+    content: [data.category, data.title, data.cover, data.content],
   };
   const options = {
     // ...

@@ -5,12 +5,14 @@ import multer from "multer";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { validationResult } from "express-validator";
+// MIDDLEWARES
 import {
   getIdMiddleware,
   postMiddleware,
   putMiddleware,
   getTitleMiddleware,
 } from "./checkMiddleware.js";
+// WRITING POSTS
 import {
   writePost,
   getPost,
@@ -177,28 +179,31 @@ postStirve.post(
   }
 );
 // SAVE FILE
-postStirve.get("/streamSrc/save", async (req, res, next) => {
-  try {
-    res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
-    const source = getReadableStream();
-    const destination = res;
-    pipeline(source, destination, (err) => {
-      if (err) next(err);
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+// postStirve.get("/streamSrc/save", async (req, res, next) => {
+//   try {
+//     res.setHeader("Content-Disposition", "atachment; filename=postsJson.json");
+//     const source = getReadableStream();
+//     const destination = res;
+//     pipeline(source, destination, (err) => {
+//       if (err) next(err);
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 // SAVE PDF
-postStirve.get("/streamSrc/savePDF", async (req, res, next) => {
+postStirve.get("/:postId/savePDF", async (req, res, next) => {
   try {
-    res.setHeader("Content-Disposition", "atachment; filename=example.pdf");
-    const source = getPdfStream();
+    // res.setHeader("Content-Disposition", "atachment; filename=example.pdf");
+    const posts = await getPost();
+    const post = posts.filter((pt) => pt._id == req.params.postId);
+    const source = getPdfStream(post[0]);
     const destination = res;
 
     pipeline(source, destination, (err) => {
       if (err) next(err);
     });
+    // res.send([post]);
   } catch (err) {
     next(err);
   }

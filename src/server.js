@@ -40,5 +40,7 @@ server.use(forbiddenFoundErrHandl);
 server.use(notFoundErrHandl);
 server.use(genericErrHandl);
 // Listen
-server.listen(port, () => {});
+server.listen(port, () => {
+  console.log(port);
+});
 console.table(listEndpoints(server));
