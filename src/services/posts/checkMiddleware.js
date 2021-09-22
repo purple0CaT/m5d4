@@ -8,7 +8,7 @@ const postJson = join(dirname(fileURLToPath(import.meta.url)), "postsLib.json");
 const getPost = () => JSON.parse(fs.readFileSync(postJson));
 
 // get ID check
-export const getIdMiddleware = (req, res, next) => {
+export const getIdMiddleware = async (req, res, next) => {
   const posts = await getPost();
   const check = posts.some((post) => post._id == req.params.postId);
   if (check) {
