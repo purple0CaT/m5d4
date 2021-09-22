@@ -11,12 +11,7 @@ import {
   forbiddenFoundErrHandl,
   badreqFoundErrHandl,
 } from "./errorHandler.js";
-// === Server ===
-const server = express();
-const port = process.env.PORT;
-const publicFolderPath = join(process.cwd(), "public");
-// === COnfiguration | Before endpoints! ===
-server.use(express.static(publicFolderPath));
+
 // === Serve CORS ===
 const whiteList = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
 const corsOptions = {
@@ -28,6 +23,13 @@ const corsOptions = {
     }
   },
 };
+// === Server ===
+const server = express();
+const port = process.env.PORT;
+const publicFolderPath = join(process.cwd(), "public");
+
+// === COnfiguration | Before endpoints! ===
+server.use(express.static(publicFolderPath));
 // body converter
 server.use(cors(corsOptions));
 server.use(express.json());

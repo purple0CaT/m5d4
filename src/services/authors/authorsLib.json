@@ -1,26 +1,33 @@
 [
   {
     "name": "Yoda",
-    "surname": "Master",
-    "email": "yoda@mail",
-    "dateBirth": "21 jan 2000",
     "avatar": "http://localhost:3003/img/authors/alkdnlaj123qlka/jpeg",
     "_id": "alkdnlaj123qlka"
   },
   {
     "name": "Dart",
-    "surname": "Vader",
-    "email": "skywalker@mail",
-    "dateBirth": "896 BBY",
     "avatar": "/http://localhost:3003/img/authors/5yua6167bktk6odfh/jpeg",
     "_id": "5yua6167bktk6odfh"
   },
   {
     "name": "Delete",
-    "surname": "Me",
-    "email": "Right@mail",
-    "dateBirth": "Now",
     "avatar": "https://ui-avatars.com/api/?name=John+Doe",
     "_id": "5yua6167bktk6123fh"
-  }
+  },
+  {
+    "name": "Tobia De Angelis",
+    "avatar": "https://striveschool.ghost.io/content/images/2020/12/tobia_mymoji.jpg",
+    "_id": 1231234
+  },
+  {
+    "name": "Bri Cho",
+    "avatar": "https://striveschool.ghost.io/content/images/2020/11/FBBRRZy5_400x400.jpg",
+    "_id": 3214456
+  },
+  {
+    "name": "Ian",
+    "_id": "123kjwabn123sj",
+    "avatar": "http://localhost:3003/img/authors/123kjwabn123sj.png"
+  },
+  { "name": "Istv", "avatar": "nbv", "_id": "5yua71frlkttv836q" }
 ]

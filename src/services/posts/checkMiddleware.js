@@ -24,7 +24,7 @@ export const postMiddleware = [
     .notEmpty()
     .withMessage("category is a mandatory field!"),
   body("title").exists().notEmpty().withMessage("title is a mandatory field!"),
-  body("cover").exists().notEmpty().withMessage("cover is a mandatory field!"),
+  body("cover").exists().withMessage("cover is a mandatory field!"),
   body("readTime.value")
     .exists()
     .notEmpty()
@@ -38,14 +38,14 @@ export const postMiddleware = [
     .exists()
     .notEmpty()
     .withMessage("name is a mandatory field!"),
-  body("author.avatar")
-    .exists()
-    .notEmpty()
-    .withMessage("avatar is a mandatory field!"),
   body("content")
     .exists()
     .notEmpty()
     .withMessage("content is a mandatory field!"),
+  // body("author.avatar")
+  //   .exists()
+  //   .notEmpty()
+  //   .withMessage("avatar is a mandatory field!"),
 ];
 // PUT CHECKER
 export const putMiddleware = (req, res, next) => {

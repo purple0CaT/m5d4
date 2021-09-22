@@ -21,10 +21,20 @@ import {
   coverPath,
   saveCoverrPic,
   getReadableStream,
+  getAuthor,
+  writeAuthor,
 } from "../fs-tools.js";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+
+const cloudinaryStorage = new CloudinaryStorage({
+  cloudinary, //authomatic read cloud URL
+  params: {
+    folder: "StriveBlog-img",
+  },
+});
 
 const postStirve = express.Router();
-
 //== GET
 postStirve.get("/", getTitleMiddleware, async (req, res, next) => {
   if (req.query.title && req.query) {
@@ -57,56 +67,76 @@ postStirve.get("/:postId", getIdMiddleware, async (req, res, next) => {
   }
 });
 
-// POST IMG
+// ========== POST Cover PHOTO
+
 postStirve.post(
   "/:postId/uploadCover",
   getIdMiddleware,
-  multer().single("coverPic"),
+  multer({
+    storage: cloudinaryStorage,
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype != "image/jpeg" && file.mimetype != "image/png")
+        cb(createHttpError(400, "Format not suported!"), false);
+      else cb(null, true);
+    },
+  }).single("coverPic"),
   async (req, res, next) => {
     try {
-      let typeFile = req.file.originalname.split(".").reverse()[0];
-      let nameOfFile = req.params.postId + "." + typeFile;
-      await saveCoverrPic(nameOfFile, req.file.buffer);
-      // fitering and edditing the Authors url
+      let urlPhoto = req.file.path;
+      // products
       const posts = await getPost();
-      const index = posts.findIndex((post) => post._id == req.params.postId);
-      const updatePosts = {
+      const index = posts.findIndex((p) => p._id == req.params.postId);
+      const updatedPosts = {
         ...posts[index],
-        cover: coverPath + nameOfFile,
+        imageUrl: urlPhoto,
       };
-      posts[index] = updatePosts;
-      //   save file
+      posts[index] = updatedPosts;
       await writePost(posts);
-      res.send("Ok");
-    } catch (err) {
-      next(err);
+      res.status(200).send("Success!");
+    } catch (error) {
+      next(error);
     }
   }
 );
 
-// POST
-postStirve.post("/", postMiddleware, async (req, res, next) => {
+// ======== REGULAR POST
+// postMiddleware,
+postStirve.post("/", async (req, res, next) => {
   const errorList = validationResult(req);
   if (!errorList.isEmpty()) {
     next(createHttpError(400, { errorList }));
   } else {
+    const newId = uniqid();
+    const newAuthorId = uniqid();
     try {
+      // AUTHOR SAVE
+      if (!req.body.author._id) {
+        const authors = await getAuthor();
+        const newAuthor = { ...req.body.author, _id: newAuthorId };
+        authors.push(newAuthor);
+        await writeAuthor;
+      }
+      // POST CREATE
       const newPost = {
         ...req.body,
         comments: [],
-        _id: uniqid(),
+        _id: newId,
         createdAt: new Date(),
       };
       const posts = await getPost();
       posts.push(newPost);
       //   save send
-      await writePost(posts);
-      res.status(200).send(newPost);
+      // await writePost(posts);
+      let authorCheck = req.body.author._id != "" ? true : false;
+      res
+        .status(200)
+        .send([{ _id: newId, author: authorCheck, authorId: newAuthorId }]);
     } catch (error) {
       next(createHttpError(400, "Bad request"));
     }
   }
 });
+
 // PUT
 postStirve.put(
   "/:postId",
@@ -131,7 +161,7 @@ postStirve.put(
     }
   }
 );
-// DELETE CHECKER
+// DELETE
 postStirve.delete("/:postId", getIdMiddleware, async (req, res, next) => {
   try {
     const posts = await getPost();
@@ -142,8 +172,7 @@ postStirve.delete("/:postId", getIdMiddleware, async (req, res, next) => {
     next(createHttpError(406, "Not Acceptable"));
   }
 });
-// Comments
-// Get
+// === GET COMMENTS
 postStirve.get("/:postId/comments", getIdMiddleware, async (req, res, next) => {
   try {
     const posts = await getPost();
@@ -153,7 +182,7 @@ postStirve.get("/:postId/comments", getIdMiddleware, async (req, res, next) => {
     next(createHttpError(400, "Bad request"));
   }
 });
-// Post
+// POST COMMENTS
 postStirve.post(
   "/:postId/comments",
   getIdMiddleware,
@@ -209,3 +238,87 @@ export default postStirve;
 //     next(err);
 //   }
 // });
+
+// POST IMAGE FORM
+// postStirve.post(
+//   "/",
+//   // postMiddleware,
+//   multer({
+//     storage: cloudinaryStorage,
+//     fileFilter: (req, file, cb) => {
+//       if (file.mimetype != "image/jpeg" && file.mimetype != "image/png")
+//         cb(createHttpError(400, "Format not suported!"), false);
+//       else cb(null, true);
+//     },
+//   }).any(),
+//   async (req, res, next) => {
+//     const errorList = validationResult(req);
+//     if (!errorList.isEmpty()) {
+//       next(createHttpError(400, { errorList }));
+//     } else {
+//       console.log(await req.files);
+// VARIABLES
+// let author = converString(req.body.author);
+// let readTime = converString(req.body.readTime);
+// let postId = uniqid();
+// let authorId = author._id;
+// let coverId = "";
+// let avatarId = "";
+// Avatar SAVE
+// if (req.files.authimg) {
+//   let typeFile = req.files.authimg[0].originalname
+//     .split(".")
+//     .reverse()[0];
+//   avatarId = `http://localhost:3003/img/authors/${authorId}.${typeFile}`;
+//   await saveAuthrPic(
+//     `${authorId}.${typeFile}`,
+//     req.files.authimg[0].buffer
+//   );
+//   author.avatar = avatarId;
+// } else {
+//   avatarId = req.body.author.avatar;
+//   author.avatar = avatarId;
+// }
+// Cover SAVE
+// if (req.files.coverImg) {
+//   let typeFile = req.files.coverImg[0].originalname
+//     .split(".")
+//     .reverse()[0];
+//   coverId = `http://localhost:3003/img/covers/${postId}.${typeFile}`;
+//   await saveCoverrPic(
+//     `${postId}.${typeFile}`,
+//     req.files.coverImg[0].buffer
+//   );
+//   coverId = req.body.cover;
+// } else {
+//   console.log("else");
+//   coverId = req.body.cover;
+// }
+// CREATE NEW AUTHOR IF NOT EXIST
+// let authorLib = await getAuthor();
+// let checkAuthor = authorLib.filter((auth) => auth._id == author._id);
+// if (!checkAuthor) {
+//   authorLib.push(author);
+//   await writeAuthor(authorLib);
+// }
+// new post
+// try {
+//   const newPost = {
+//     ...req.body,
+//     cover: coverId,
+//     author: author,
+//     readTime: readTime,
+//     comments: [],
+//     _id: postId,
+//     createdAt: new Date(),
+//   };
+//   const posts = await getPost();
+//   posts.push(newPost);
+//   await writePost(posts);
+//   res.status(200).send("Success!");
+// } catch (error) {
+//   next(createHttpError(400, "Bad request"));
+// }
+//     }
+//   }
+// );

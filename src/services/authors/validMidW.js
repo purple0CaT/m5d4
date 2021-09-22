@@ -28,3 +28,4 @@ export const checkPostValid = [
     .withMessage("Date of Birth is a mandatory field!"),
   body("avatar").exists().withMessage("Avatar is a mandatory field!"),
 ];
+
