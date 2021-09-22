@@ -126,7 +126,7 @@ postStirve.post("/", async (req, res, next) => {
       const posts = await getPost();
       posts.push(newPost);
       //   save send
-      // await writePost(posts);
+      await writePost(posts);
       let authorCheck = req.body.author._id != "" ? true : false;
       res
         .status(200)
