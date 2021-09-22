@@ -185,7 +185,7 @@ postStirve.get("/:postId/savePDF", async (req, res, next) => {
     const posts = await getPost();
     const post = posts.filter((pt) => pt._id == req.params.postId);
     res.setHeader("Content-Disposition", "atachment; filename=Post.pdf");
-    const source = getPdfStream(post[0]);
+    const source = await getPdfStream(post[0]);
     const destination = res;
     pipeline(source, destination, (err) => {
       if (err) next(err);
