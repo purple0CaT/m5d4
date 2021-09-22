@@ -24,6 +24,7 @@
     "uniqid": "^5.4.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "dotenv": "^10.0.0"
   }
 }
