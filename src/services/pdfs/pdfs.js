@@ -54,14 +54,9 @@ pdfsSend.post("/:postId/sendPdfEmail", async (req, res, next) => {
     const { email } = req.body;
     const posts = await getPost();
     const post = posts.filter((pt) => pt._id == req.params.postId);
-    const source = await getPdfStream(post[0]);
+    const source = await getPdfStream(post[0], res, true);
     await sendMssg(email, source);
-    console.log(source.body);
     res.status(200).send("Ok");
-    // pipeline(source, destination, (err) => {
-    //   if (err) next(err);
-    // });
-    // console.log("Works");
   } catch (err) {
     next(err);
   }

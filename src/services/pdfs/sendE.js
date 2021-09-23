@@ -25,6 +25,6 @@ export const sendMssg = async (email, file) => {
     if (err) {
       console.log(err);
     }
-    console.log(info.response);
+    // console.log(info.response);
   });
 };

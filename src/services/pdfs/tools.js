@@ -15,7 +15,7 @@ const fonts = {
 };
 const printer = new PdfPrinter(fonts);
 // PDF STREAM
-export const getPdfStream = async (data, res) => {
+export const getPdfStream = async (data, res, sendEmail) => {
   // Fetching Post Data
   const response = await axios.get(data.cover, {
     responseType: "arraybuffer",
@@ -55,6 +55,9 @@ export const getPdfStream = async (data, res) => {
   //  CREATE / SAVE / SEND
   const pdfDoc = printer.createPdfKitDocument(docContent, options);
   pdfDoc.end();
+  if (sendEmail) {
+    return pdfDoc;
+  }
   await asyncPipeline(pdfDoc, res);
 };
 
