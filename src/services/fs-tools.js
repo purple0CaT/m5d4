@@ -40,3 +40,4 @@ const url = `${baseURL}/img/authors/FILENAME`;
 // STREAM
 // STREAM
 export const getReadableStream = () => fs.createReadStream(postsJson);
+export const getReadableStreamAuthr = () => fs.createReadStream(authorJson);
