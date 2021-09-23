@@ -42,7 +42,7 @@ pdfsSend.post("/:postId/sendPdfEmail", async (req, res, next) => {
 
     await sendMssg(email, source);
     console.log(source.body);
-    res.send("Ok!");
+    res.status(200).send("Ok");
   } catch (err) {
     next(err);
   }
