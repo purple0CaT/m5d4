@@ -18,9 +18,6 @@ import {
 import {
   writePost,
   getPost,
-  coverPath,
-  saveCoverrPic,
-  getReadableStream,
   getAuthor,
   writeAuthor,
 } from "../fs-tools.js";
@@ -86,12 +83,13 @@ postStirve.post(
       // products
       const posts = await getPost();
       const index = posts.findIndex((p) => p._id == req.params.postId);
-      const updatedPosts = {
+      let updatedPosts = {
         ...posts[index],
         cover: urlPhoto,
       };
       posts[index] = updatedPosts;
       await writePost(posts);
+
       res.status(200).send("Success!");
     } catch (error) {
       next(error);

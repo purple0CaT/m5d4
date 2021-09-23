@@ -7,8 +7,6 @@ import postStirve from "./services/posts/posts.js";
 import authorStrive from "./services/authors/authors.js";
 import {
   genericErrHandl,
-  notFoundErrHandl,
-  forbiddenFoundErrHandl,
   badreqFoundErrHandl,
 } from "./errorHandler.js";
 
@@ -38,8 +36,6 @@ server.use("/authors", authorStrive);
 server.use("/blogPosts", postStirve);
 // ERROR MIDDLEWARE
 server.use(badreqFoundErrHandl);
-server.use(forbiddenFoundErrHandl);
-server.use(notFoundErrHandl);
 server.use(genericErrHandl);
 // Listen
 server.listen(port, () => {
