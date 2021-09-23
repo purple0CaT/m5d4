@@ -52,7 +52,6 @@ export const getPdfStream = async (data) => {
   };
   const pdfDoc = printer.createPdfKitDocument(docDefinition, options);
   pdfDoc.end();
-  console.log(1);
 
   return pdfDoc;
 };

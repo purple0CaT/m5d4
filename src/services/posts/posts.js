@@ -2,11 +2,7 @@ import express from "express";
 import createHttpError from "http-errors";
 import uniqid from "uniqid";
 import multer from "multer";
-// import { fileURLToPath } from "url";
-// import { dirname, join } from "path";
 import { validationResult } from "express-validator";
-import { pipeline } from "stream";
-import { getPdfStream } from "./pdf.js";
 // MIDDLEWARES
 import {
   getIdMiddleware,
@@ -15,12 +11,7 @@ import {
   getTitleMiddleware,
 } from "./checkMiddleware.js";
 // WRITING POSTS
-import {
-  writePost,
-  getPost,
-  getAuthor,
-  writeAuthor,
-} from "../fs-tools.js";
+import { writePost, getPost, getAuthor, writeAuthor } from "../fs-tools.js";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -206,21 +197,6 @@ postStirve.post(
   }
 );
 
-// SAVE PDF
-postStirve.get("/:postId/savePDF", async (req, res, next) => {
-  try {
-    const posts = await getPost();
-    const post = posts.filter((pt) => pt._id == req.params.postId);
-    res.setHeader("Content-Disposition", "atachment; filename=Post.pdf");
-    const source = await getPdfStream(post[0]);
-    const destination = res;
-    pipeline(source, destination, (err) => {
-      if (err) next(err);
-    });
-  } catch (err) {
-    next(err);
-  }
-});
 // exp
 export default postStirve;
 // SAVE FILE

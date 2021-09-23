@@ -5,10 +5,8 @@ import { join } from "path";
 import listEndpoints from "express-list-endpoints";
 import postStirve from "./services/posts/posts.js";
 import authorStrive from "./services/authors/authors.js";
-import {
-  genericErrHandl,
-  badreqFoundErrHandl,
-} from "./errorHandler.js";
+import { genericErrHandl, badreqFoundErrHandl } from "./errorHandler.js";
+import pdfsSend from "./services/pdfs/pdfs.js";
 
 // === Serve CORS ===
 const whiteList = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
@@ -34,6 +32,7 @@ server.use(express.json());
 // ==== ROUTES / ENDPOINTS ====
 server.use("/authors", authorStrive);
 server.use("/blogPosts", postStirve);
+server.use("/pdfs", pdfsSend);
 // ERROR MIDDLEWARE
 server.use(badreqFoundErrHandl);
 server.use(genericErrHandl);
